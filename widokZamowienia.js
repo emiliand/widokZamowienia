@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.1
+// @version      0.2
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php?idt=*
@@ -17,6 +17,13 @@ function getMagazyn() {
 
     var value = $('#fg_processing_stock').val();
     var valueText = $('#fg_processing_stock option:selected').text();
+
+    if (!value) {
+        var $td = $('#pageContent').find('td:contains("Realizacja z magazynu")');
+        valueText = $td.next().text();
+        value = valueText.substr(0, valueText.indexOf(' '));
+        value = value.substr(1);
+    }
 
 
     $("<em>", {
