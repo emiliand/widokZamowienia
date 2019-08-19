@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.2
+// @version      0.3
 // @description  Reorganizacja widoku zamowienia
 // @author       You
-// @match        https://www.demus-zegarki.pl/panel/orderd.php?idt=*
+// @match        https://www.demus-zegarki.pl/panel/orderd.php*
 // @grant        none
 // ==/UserScript==
 
