@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.4
+// @version      0.5
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -41,7 +41,7 @@ function getMagazyn() {
 }
 
 function getStatusy() {
-    var $td = $('#pageContent').find('td:contains("Nr zamówienia"):first');
+    var $td = $('#pageContent').find('td:contains("Nr zamówienia")');
     var $tr = $td.parents('form').parents('tr');
     var tr = [];
     tr.push($tr);
@@ -107,7 +107,7 @@ function getOptions() {
 
     var option = localStorage.getItem('tamperOn');
 
-    if (option == 0 || option === 'undefined') {
+    if (option == 0 || option === null) {
         $('#enable-tamper').click('click', function() {
             localStorage.setItem('tamperOn', 1);
             window.location.reload(false);
