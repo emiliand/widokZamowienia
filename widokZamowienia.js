@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.7
+// @version      0.8
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -14,7 +14,9 @@ var styles = {
     "override_tr": {"max-width": "95%"},
     "tamper_options": {"float": "right"},
     "h1": {"float": "left", "border": "0 none"},
-    "msg_wrapper": {"max-width": "75%"}
+    "msg_wrapper": {"max-width": "75%"},
+    "hide": {"display": "none"},
+    "alert": {"margin": "0", "padding": "0 15px"}
 };
 
 function getNrZam() {
@@ -44,6 +46,11 @@ function getMagazyn() {
             css: styles.icon
         }).prependTo('#tamperMagazyn');
     }
+}
+
+function setAlert(text) {
+    var alertSkeleton = '<div class="alert alert-danger" role="alert" style="font-weight: bold"></div>';
+    $(alertSkeleton).css(styles.alert).text(text).appendTo('#tamperMagazyn');
 }
 
 function getStatusy() {
@@ -86,14 +93,21 @@ function getNotatkiZam() {
 
     for (var j = 0; j < 6; j++) {
         tr[j].appendTo('#tamperNotatkiZam');
+        if (tr[j].find(':contains("Klient poprosił o fakturę VAT")').length > 0) {
+            setAlert('Możliwa FAKTURA VAT');
+        }
     }
 }
 
 function getDaneKlienta() {
     var $td = $('#pageContent').find('td:contains("Dane klienta"):first');
     var $tr = $td.parent();
-    $td.contents().unwrap().appendTo('#tamperDaneKlienta');
-    $tr.next().find('td:first').contents().unwrap().appendTo('#tamperDaneKlienta');
+    $td.appendTo('#tamperDaneKlienta');
+    var $trNext = $tr.next();
+    $trNext.appendTo('#tamperDaneKlienta');
+    if ($trNext.find(':contains("NIP:")').length > 0) {
+        setAlert('PODANY NIP!');
+    }
 }
 
 function getProductList() {
@@ -146,7 +160,10 @@ getMagazyn();
 if (localStorage.getItem('tamperOn') == 1) {
     getNrZam();
     $('.tr').css(styles.override_tr);
-    $('#hnt').css(styles.msg_wrapper);
+    $('.msgWrapper:first').css(styles.msg_wrapper);
+    $('.breadcrumbs').css(styles.hide);
+    $('.navbar:first').css(styles.hide);
+    $('.alert').css(styles.alert);
     getWartoscZam();
     getStatusy();
     getNotatkiZam();
