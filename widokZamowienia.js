@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.6
+// @version      0.7
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -18,8 +18,7 @@ var styles = {
 };
 
 function getNrZam() {
-    $('.page-header').css(styles.h1).appendTo('#tamperMagazyn');
-    $('#hnt').css(styles.msg_wrapper);
+    $('.page-header').css(styles.h1).appendTo('#tamperMagazyn');    
 }
 
 function getMagazyn() {
@@ -143,10 +142,11 @@ var orderTable = $('#pageContent').find('table').first();
 
 $(content).prependTo(orderTable);
 getOptions();
-getNrZam();
 getMagazyn();
 if (localStorage.getItem('tamperOn') == 1) {
+    getNrZam();
     $('.tr').css(styles.override_tr);
+    $('#hnt').css(styles.msg_wrapper);
     getWartoscZam();
     getStatusy();
     getNotatkiZam();
