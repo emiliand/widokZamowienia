@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.9
+// @version      0.10
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -161,7 +161,7 @@ if (localStorage.getItem('tamperOn') == 1) {
     getNrZam();
     $('.tr').css(styles.override_tr);
     $('.msgWrapper:first').css(styles.msg_wrapper);
-    $('.breadcrumbs').css(styles.hide);
+    $('.breadcrumbs .pull-right').css(styles.hide);
     $('.navbar:first').css(styles.hide);
     $('.alert').css(styles.alert);
     getWartoscZam();
