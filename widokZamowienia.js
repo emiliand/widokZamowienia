@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         TEMP Reorganizacja FINAL
+// @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.11
+// @version      0.12
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -114,10 +114,16 @@
         $('.section-1:eq(1)').find('#tr_0').addClass('tamper-important');
 
         // section 2-4
-        $('.section-2:first').before($('<tr><td id="tamperDaneKlienta"></td><td id="tamperNotatki"></td></tr>'));
-        $('.section-2').appendTo('#tamperNotatki');
-        $('.section-3').appendTo('#tamperNotatki');
-        $('.section-4').appendTo('#tamperDaneKlienta');
+        $('.section-2:first').before($('<tr><td id="tamperSideLeft"></td><td id="tamperSideRight"></td></tr>'));
+        $('.section-2').appendTo('#tamperSideLeft');
+        $('.section-3').appendTo('#tamperSideRight');
+        $('.section-4').appendTo('#tamperSideLeft');
+        if ($('.section-2').find(':contains("Klient poprosił o fakturę VAT")').length > 0) {
+            setAlert('Możliwa FAKTURA VAT');
+        }
+        if ($('.section-4').find(':contains("NIP:")').length > 0) {
+            setAlert('PODANY NIP!');
+        }
 
         //section 6 move before 5
         $('.section-5:first').before($('.section-6'));
