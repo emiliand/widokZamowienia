@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.15
+// @version      0.16
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -20,7 +20,8 @@
         "hide": {"display": "none"},
         "alert": {"margin": "0", "padding": "0 15px"},
         "highlight_red": {"background-color": "#f2dede"},
-        "table_table": {"margin-bottom": "0"}
+        "table_table": {"margin-bottom": "0"},
+        "toggle_expand": {"cursor": "pointer"}
     };
 
     function getOptions() {
@@ -160,6 +161,7 @@
         }
 
         $('.tamper-toggle-section').on('click', function() {
+            $(this).find('.fa').toggle();
             var sectionId = $(this).data('section');
             $('.' + sectionId + ':not(.tamper-important)').toggle();
             $('.' + sectionId).find('.tamper-toggle-child:not(.tamper-important)').toggle();
@@ -167,7 +169,9 @@
     }
 
     function createToggleRow(sectionId, sectionTitle = 'Sekcja') {
-        return $('<tr class="tamper-toggle-section tamper-important" data-section="section-' + sectionId + '"><td colspan="2">' + sectionTitle + '</td></tr>');
+        return $('<tr class="tamper-toggle-section tamper-important" data-section="section-' + sectionId + '"><td colspan="2">' + sectionTitle +
+                 '<i class="fa fa-long-arrow-down" style="display: none; margin-left: 10px;" aria-hidden="true"></i><i class="fa fa-long-arrow-left" style="margin-left: 10px;" aria-hidden="true"></i>' +
+                 '</td></tr>').css(styles.toggle_expand);
     }
 
     function createRow(sectionId, sectionTitle = 'Sekcja', sectionStyle = '') {
