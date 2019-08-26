@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.12
+// @version      0.13
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -18,7 +18,8 @@
         "h1": {"float": "left", "border": "0 none"},
         "msg_wrapper": {"max-width": "75%"},
         "hide": {"display": "none"},
-        "alert": {"margin": "0", "padding": "0 15px"}
+        "alert": {"margin": "0", "padding": "0 15px"},
+        "highlight_red": {"background-color": "#f2dede"}
     };
 
     function getOptions() {
@@ -71,7 +72,7 @@
         var sectionMarkers = [
             'Wpłaty',
             'Notatka do zamówienia',
-            'Przesyłka',
+            'Przesyłka:',
             'Dane klienta',
             'Towary przypisane do zamówienia',
             'Dokumenty',
@@ -109,7 +110,8 @@
             setAlert('Koszty wysyłki 0 zł');
         }
         $('.section-1:first').before(createToggleRow(1, "Wpłaty"));
-        $('.section-1:first').before(createRow(1, '<strong>Razem:</strong> ' + total + ', <strong>Koszt przesyłki:</strong> ' + delivery, 'important_val'));
+//         $('.section-1:first').before(createRow(1, '<strong>Razem:</strong> ' + total + ', <strong>Koszt przesyłki:</strong> ' + delivery, 'almost_important_val'));
+        $('.section-1:first').before(createRow(1, '<strong>Razem:</strong> ' + total, 'almost_important_val'));
         $('.section-1:eq(1)').addClass('tamper-important').find('.row2').addClass('tamper-toggle-child');
         $('.section-1:eq(1)').find('#tr_0').addClass('tamper-important');
 
@@ -117,10 +119,29 @@
         $('.section-2:first').before($('<tr><td id="tamperSideLeft"></td><td id="tamperSideRight"></td></tr>'));
         $('.section-2').appendTo('#tamperSideLeft');
         $('.section-3').appendTo('#tamperSideRight');
+        $('.section-3').find('.shipping-costs').css(styles.important_val);
         $('.section-4').appendTo('#tamperSideLeft');
-        if ($('.section-2').find(':contains("Klient poprosił o fakturę VAT")').length > 0) {
-            setAlert('Możliwa FAKTURA VAT');
+
+        var $el_order_note = $('#div_order_note');
+        if ($el_order_note.text() != 'brak') {
+            setAlert('', $el_order_note.parent('td'));
         }
+
+        var $el_faktura = $('#order-requested-documents');
+        if ($el_faktura.find(':contains("Klient poprosił o fakturę VAT")').length > 0) {
+            setAlert('Możliwa FAKTURA VAT', $el_faktura);
+        }
+
+        var $el_client_note = $('#div_client_note');
+        if ($el_client_note.text() !== 'brak') {
+            setAlert('', $el_client_note);
+        }
+
+        var $el_deliverer_note = $('#div_deliverer_note');
+        if ($el_deliverer_note.text() != 'brak') {
+            setAlert('', $el_deliverer_note.parent('td'));
+        }
+
         if ($('.section-4').find(':contains("NIP:")').length > 0) {
             setAlert('PODANY NIP!');
         }
@@ -140,12 +161,18 @@
     }
 
     function createRow(sectionId, sectionTitle = 'Sekcja', sectionStyle = '') {
-        return $('<tr class="tamper-important" data-section="section-' + sectionId + '"><td colspan="2">' + sectionTitle + '</td></tr>').css(styles.almost_important_val);
+        return $('<tr class="tamper-important" data-section="section-' + sectionId + '"><td colspan="2">' + sectionTitle + '</td></tr>').css(styles[sectionStyle]);
     }
 
-    function setAlert(text) {
-        var alertSkeleton = '<div class="alert alert-danger" role="alert" style="font-weight: bold"></div>';
-        $(alertSkeleton).css(styles.alert).text(text).appendTo('#tamperAlerts');
+    function setAlert(text, element = '') {
+        if (text.length > 0) {
+            var alertSkeleton = '<div class="alert alert-danger" role="alert" style="font-weight: bold"></div>';
+            $(alertSkeleton).css(styles.alert).text(text).appendTo('#tamperAlerts');
+        }
+
+        if (element.length > 0) {
+            element.css(styles.highlight_red);
+        }
     }
 
     function hideNonImportant(numberOfSections) {
