@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.14
+// @version      0.15
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -123,21 +123,25 @@
         $('.section-3').find('.shipping-costs').css(styles.important_val);
         $('.section-4').appendTo('#tamperSideLeft');
 
+        // notatkta do zamowienia
         var $el_order_note = $('#div_order_note');
         if ($el_order_note.text() != 'brak') {
             setAlert('', $el_order_note.parent('td'));
         }
 
+        // notatka z dokumentach
         var $el_faktura = $('#order-requested-documents');
         if ($el_faktura.find(':contains("Klient poprosił o fakturę VAT")').length > 0) {
             setAlert('Możliwa FAKTURA VAT', $el_faktura);
         }
 
+        // notatka od klienta
         var $el_client_note = $('#div_client_note');
         if ($el_client_note.text() !== 'brak') {
             setAlert('', $el_client_note);
         }
 
+        // notatka dla kuriera
         var $el_deliverer_note = $('#div_deliverer_note');
         if ($el_deliverer_note.text() != 'brak') {
             setAlert('', $el_deliverer_note.parent('td'));
@@ -149,6 +153,11 @@
 
         //section 6 move before 5
         $('.section-5:first').before($('.section-6'));
+        // notatka o kliencie
+        var $el_note_about_client = $('.section-5').find($("div[class^='client_note_']"));
+        if ($el_note_about_client.text() !== 'brak') {
+            setAlert('istnieje NOTATKA O KLIENCIE', $el_note_about_client.parent('td'));
+        }
 
         $('.tamper-toggle-section').on('click', function() {
             var sectionId = $(this).data('section');
