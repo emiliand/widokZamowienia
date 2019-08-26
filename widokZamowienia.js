@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.17
+// @version      0.18
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -19,7 +19,7 @@
         "msg_wrapper": {"max-width": "75%"},
         "hide": {"display": "none"},
         "alert": {"margin": "0", "padding": "0 15px"},
-        "highlight_red": {"background-color": "#f2dede"},
+        "highlight_red": {"border": "2px dashed red", "font-size": "1.2em", "background-color": "white"},
         "table_table": {"margin-bottom": "0"},
         "toggle_expand": {"cursor": "pointer"}
     };
@@ -109,7 +109,7 @@
         var total = $('#iai-js-total_order_cost').text();
         var delivery = $('.shipping-costs:first').text();
         if (delivery == '0,00 zł') {
-            setAlert('', $('.section-3').find('.shipping-costs').parents('td'));
+            setAlert('', $('.section-3').find('.shipping-costs').parents('td:first'));
         }
         $('.section-1:first').before(createToggleRow(1, "Wpłaty"));
 //         $('.section-1:first').before(createRow(1, '<strong>Razem:</strong> ' + total + ', <strong>Koszt przesyłki:</strong> ' + delivery, 'almost_important_val'));
