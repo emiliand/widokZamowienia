@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.16
+// @version      0.17
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -109,7 +109,7 @@
         var total = $('#iai-js-total_order_cost').text();
         var delivery = $('.shipping-costs:first').text();
         if (delivery == '0,00 zł') {
-            setAlert('Koszty wysyłki 0 zł');
+            setAlert('', $('.section-3').find('.shipping-costs').parents('td'));
         }
         $('.section-1:first').before(createToggleRow(1, "Wpłaty"));
 //         $('.section-1:first').before(createRow(1, '<strong>Razem:</strong> ' + total + ', <strong>Koszt przesyłki:</strong> ' + delivery, 'almost_important_val'));
