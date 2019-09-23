@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.18
+// @version      0.19
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -21,7 +21,8 @@
         "alert": {"margin": "0", "padding": "0 15px"},
         "highlight_red": {"border": "2px dashed red", "font-size": "1.2em", "background-color": "white"},
         "table_table": {"margin-bottom": "0"},
-        "toggle_expand": {"cursor": "pointer"}
+        "toggle_expand": {"cursor": "pointer"},
+        "auto_width": {"width": "auto"}
     };
 
     function getOptions() {
@@ -116,6 +117,7 @@
         $('.section-1:first').before(createRow(1, '<strong>Razem:</strong> ' + total, 'almost_important_val'));
         $('.section-1:eq(1)').addClass('tamper-important').find('.row2').addClass('tamper-toggle-child');
         $('.section-1:eq(1)').find('#tr_0').addClass('tamper-important');
+        $('.section-1:eq(1)').find('#tr_0').find('> td').css(styles.auto_width);
 
         // section 2-4
         $('.section-2:first').before($('<tr><td id="tamperSideLeft"></td><td id="tamperSideRight"></td></tr>'));
