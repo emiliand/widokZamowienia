@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.19
+// @version      0.20
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -150,9 +150,26 @@
             setAlert('', $el_deliverer_note.parent('td'));
         }
 
+        // podany NIP
         if ($('.section-4').find(':contains("NIP:")').length > 0) {
             setAlert('PODANY NIP!');
         }
+
+        // informacja o adnotacji przy produkcie
+        var adnotacjeProductInterval;
+        adnotacjeProductInterval = setInterval(function() {
+            if ($('#products-list tbody.yui-dt-data').find('.yui-dt-col-name:first').length > 0) {
+                console.log('kasujemy')
+                clearInterval(adnotacjeProductInterval);
+
+                $('#products-list tbody.yui-dt-data').find('.yui-dt-col-name').each(function(k, v){
+                    var _this = $(v);
+                    var productName = _this.find('b:first').text();
+                    var productAdnotacja = _this.find('i:first').text();
+                    setAlert(productName + ' - ' + productAdnotacja, _this.find('>div'));
+                });
+            }
+        }, 500);
 
         //section 6 move before 5
         $('.section-5:first').before($('.section-6'));
