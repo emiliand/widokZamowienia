@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.22
+// @version      0.24
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -19,11 +19,13 @@
         "msg_wrapper": {"max-width": "75%"},
         "hide": {"display": "none"},
         "alert": {"margin": "0", "padding": "0 15px"},
-        "highlight_red": {"border": "2px dashed red", "font-size": "1.2em", "background-color": "white"},
+        "highlight_red": {"border": "3px dashed red", "font-size": "1.2em", "background-color": "white"},
+        "highlight_gradient": {"background-image": "linear-gradient(red , yellow)", "color": "white"},
         "table_table": {"margin-bottom": "0"},
         "toggle_expand": {"cursor": "pointer"},
         "auto_width": {"width": "auto"}
     };
+    var defaultAlertStyles = {"alert": styles.alert, "highlight": styles.highlight_red};
 
     function getOptions() {
         var select = '<select id="enable-tamper">' +
@@ -166,7 +168,11 @@
                     var productName = _this.find('b:first').text();
                     var productAdnotacja = _this.find('i:first').text();
                     if (productAdnotacja.length > 0) {
-                        setAlert(productName + ' - ' + productAdnotacja, _this.find('>div'));
+                        if (productAdnotacja.toLowerCase().indexOf('#gratis') > -1) {
+                            var customStyles = defaultAlertStyles;
+                            customStyles.highlight = styles.highlight_gradient;
+                            setAlert('', _this.find('>div'), customStyles);
+                        }
                     }
                 });
             }
@@ -198,14 +204,14 @@
         return $('<tr class="tamper-important" data-section="section-' + sectionId + '"><td colspan="2">' + sectionTitle + '</td></tr>').css(styles[sectionStyle]);
     }
 
-    function setAlert(text, element = '') {
+    function setAlert(text, element = '', addStyles = defaultAlertStyles) {
         if (text.length > 0) {
             var alertSkeleton = '<div class="alert alert-danger" role="alert" style="font-weight: bold"></div>';
-            $(alertSkeleton).css(styles.alert).text(text).appendTo('#tamperAlerts');
+            $(alertSkeleton).css(addStyles.alert).text(text).appendTo('#tamperAlerts');
         }
 
         if (element.length > 0) {
-            element.css(styles.highlight_red);
+            element.css(addStyles.highlight);
         }
     }
 
