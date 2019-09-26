@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.20
+// @version      0.21
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -159,7 +159,6 @@
         var adnotacjeProductInterval;
         adnotacjeProductInterval = setInterval(function() {
             if ($('#products-list tbody.yui-dt-data').find('.yui-dt-col-name:first').length > 0) {
-                console.log('kasujemy')
                 clearInterval(adnotacjeProductInterval);
 
                 $('#products-list tbody.yui-dt-data').find('.yui-dt-col-name').each(function(k, v){
