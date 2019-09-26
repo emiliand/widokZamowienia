@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.21
+// @version      0.22
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -165,7 +165,9 @@
                     var _this = $(v);
                     var productName = _this.find('b:first').text();
                     var productAdnotacja = _this.find('i:first').text();
-                    setAlert(productName + ' - ' + productAdnotacja, _this.find('>div'));
+                    if (productAdnotacja.length > 0) {
+                        setAlert(productName + ' - ' + productAdnotacja, _this.find('>div'));
+                    }
                 });
             }
         }, 500);
