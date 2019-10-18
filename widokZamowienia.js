@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.24
+// @version      0.25
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -23,7 +23,8 @@
         "highlight_gradient": {"background-image": "linear-gradient(red , yellow)", "color": "white"},
         "table_table": {"margin-bottom": "0"},
         "toggle_expand": {"cursor": "pointer"},
-        "auto_width": {"width": "auto"}
+        "auto_width": {"width": "auto"},
+        "blurred_lines": {"filter": "blur(5px)", "-webkit-filter": "blur(5px)", "pointer-events": "none"}
     };
     var defaultAlertStyles = {"alert": styles.alert, "highlight": styles.highlight_red};
 
@@ -31,6 +32,8 @@
         var select = '<select id="enable-tamper">' +
             '<option value="0">wyłącz tamper</option>' +
             '<option value="1">ściaśniaj</option>' +
+            '<option value="8">pakowanie Czesław</option>' +
+            '<option value="18">pakowanie Buła</option>' +
             '</select>';
         $(select).appendTo('#tamperOptions');
         $('#tamperOptions').css(styles.tamper_options);
@@ -49,14 +52,14 @@
     }
 
     function getMagazyn() {
-        var value = $('#fg_processing_stock').val();
+        var magazynId = $('#fg_processing_stock').val();
         var valueText = $('#fg_processing_stock option:selected').text();
 
-        if (!value) {
+        if (!magazynId) {
             var $td = $('#pageContent').find('td:contains("Realizacja z magazynu"):first');
             valueText = $td.next().text();
-            value = valueText.substr(0, valueText.indexOf(' '));
-            value = value.substr(1);
+            magazynId = valueText.substr(0, valueText.indexOf(' '));
+            magazynId = magazynId.substr(1);
         }
 
 
@@ -64,12 +67,20 @@
             css: styles.important_val
         }).text(valueText).appendTo('#tamperMagazyn');
 
-        if (value == 18) {
+        if (magazynId == 18) {
             $('<img>', {
                 src: 'https://cdn3.iconfinder.com/data/icons/object-emoji/50/Poop-512.png',
                 css: styles.icon
             }).prependTo('#tamperMagazyn');
         }
+
+        return magazynId;
+    }
+
+    function getStatus(){
+        var statusId = $('.status-select').val();
+
+        return statusId;
     }
 
     function markSections($el) {
@@ -97,6 +108,19 @@
         });
 
         return sectionId;
+    }
+
+    function blurSection(section) {
+        var tamperSetting = localStorage.getItem('tamperOn');
+        if (tamperSetting < 8 || window.tamperStatusId != 'b') {
+            return;
+        }
+
+        if (tamperSetting !== window.tamperMagazynId) {
+
+            $(section).css(styles.blurred_lines);
+        }
+
     }
 
     function prepareSections() {
@@ -162,6 +186,8 @@
         adnotacjeProductInterval = setInterval(function() {
             if ($('#products-list tbody.yui-dt-data').find('.yui-dt-col-name:first').length > 0) {
                 clearInterval(adnotacjeProductInterval);
+
+                blurSection('#products-list td:not(.yui-dt0-col-icon)');
 
                 $('#products-list tbody.yui-dt-data').find('.yui-dt-col-name').each(function(k, v){
                     var _this = $(v);
@@ -233,9 +259,10 @@
     var numberOfSections = markSections($mainTable);
     $(content).prependTo($mainTable);
     getOptions();
-    getMagazyn();
+    window.tamperMagazynId = getMagazyn();
+    window.tamperStatusId = getStatus();
     getNrZam();
-    if (localStorage.getItem('tamperOn') == 1) {
+    if (localStorage.getItem('tamperOn') > 0) {
         $('.tr').css(styles.override_tr);
         $('.msgWrapper:first').css(styles.msg_wrapper);
         $('.breadcrumbs .pull-right').css(styles.hide);
