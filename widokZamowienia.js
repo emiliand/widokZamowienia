@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.27
+// @version      0.28
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -221,7 +221,7 @@
     }
 
     function createToggleRow(sectionId, sectionTitle = 'Sekcja') {
-        return $('<tr class="tamper-toggle-section tamper-important" data-section="section-' + sectionId + '"><td colspan="2">' + sectionTitle +
+        return $('<tr class="tamper-toggle-section tamper-important" data-section="section-' + sectionId + '"><td colspan="2" style="background-color: #ddd">' + sectionTitle +
                  '<i class="fa fa-long-arrow-down" style="display: none; margin-left: 10px;" aria-hidden="true"></i><i class="fa fa-long-arrow-left" style="margin-left: 10px;" aria-hidden="true"></i>' +
                  '</td></tr>').css(styles.toggle_expand);
     }
