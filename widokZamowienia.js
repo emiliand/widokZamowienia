@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.25
+// @version      0.26
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -266,7 +266,11 @@
         $('.tr').css(styles.override_tr);
         $('.msgWrapper:first').css(styles.msg_wrapper);
         $('.breadcrumbs .pull-right').css(styles.hide);
-        $('.navbar:first').css(styles.hide);
+        var $navbar = $('.navbar:first');
+        $navbar.css('min-height', 'auto');
+        $navbar.find('>div.pull-left').css({'height':'20px', 'overflow': 'hidden'});
+        $navbar.find('>div.pull-right').css({'height':'20px', 'overflow': 'hidden'});
+        $navbar.find('.navbar-main').css('margin-top', 'auto');
         $('.alert').css(styles.alert);
         $('table table').css(styles.table_table);
         prepareSections();
