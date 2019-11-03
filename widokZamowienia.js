@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.26
+// @version      0.27
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -263,14 +263,19 @@
     window.tamperStatusId = getStatus();
     getNrZam();
     if (localStorage.getItem('tamperOn') > 0) {
+        $('.tr:first').css('margin-top', '0');
         $('.tr').css(styles.override_tr);
         $('.msgWrapper:first').css(styles.msg_wrapper);
-        $('.breadcrumbs .pull-right').css(styles.hide);
+        var $breadcrumbs = $('.breadcrumbs');
+        $breadcrumbs.find('.pull-right').css(styles.hide);
+        $breadcrumbs.css({'min-height':'auto', 'line-height':'20px'});
+        $breadcrumbs.find('.breadcrumb').css('margin-top', '0');
         var $navbar = $('.navbar:first');
         $navbar.css('min-height', 'auto');
         $navbar.find('>div.pull-left').css({'height':'20px', 'overflow': 'hidden'});
         $navbar.find('>div.pull-right').css({'height':'20px', 'overflow': 'hidden'});
         $navbar.find('.navbar-main').css('margin-top', 'auto');
+        $('#pageContent').css('padding-top', '0');
         $('.alert').css(styles.alert);
         $('table table').css(styles.table_table);
         prepareSections();
