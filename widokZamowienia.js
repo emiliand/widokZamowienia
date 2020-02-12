@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.28
+// @version      0.29
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -210,6 +210,26 @@
         var $el_note_about_client = $('.section-5').find($("div[class^='client_note_']"));
         if ($el_note_about_client.text() !== 'brak') {
             setAlert('istnieje NOTATKA O KLIENCIE', $el_note_about_client.parent('td'));
+        }
+
+        //statystyki (konto sprzedającego w serwisie zewn.)
+        var $konto_zewn = $('.orderd-footer-content').find('li:contains("Konto sprzedającego w serwisie zewnętrznym")');
+        if ($konto_zewn.length > 0) {
+            var $konto_zewn_text = $konto_zewn.text();
+            $konto_zewn_text = $konto_zewn_text.substring($konto_zewn_text.indexOf(':')+2);
+            if ($konto_zewn_text == 'demus-zegarki') {
+                setAlert('realizacja zamówienia powinna iść z magazynu M12 lub M18');
+                if (window.tamperMagazynId != '12' && window.tamperMagazynId != '18') {
+                    alert('WYBRANY ZLY MAGAZYN, powinien być M12 lub M18');
+                }
+            } else if($konto_zewn_text == 'Zegary-Demus') {
+                setAlert('realizacja zamówienia powinna iść z magazynu M8');
+                if (window.tamperMagazynId != '8') {
+                    alert('WYBRANY ZLY MAGAZYN, powinien być M8');
+                }
+            } else {
+                alert('wystapil blad z rozpoznaniem konta w serwisie zewnętrznym, prosze o zgloszenie nr zamowienia do Emila');
+            }
         }
 
         $('.tamper-toggle-section').on('click', function() {
