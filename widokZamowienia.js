@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.30
+// @version      0.31
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -110,14 +110,23 @@
         return sectionId;
     }
 
+    function nieJestPakowaneTamper() {
+        var tamperSetting = localStorage.getItem('tamperOn');
+        //ustawienie tamper lub status - pakowane
+        if (tamperSetting < 8 || window.tamperStatusId != 'b') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     function blurSection(section) {
         var tamperSetting = localStorage.getItem('tamperOn');
-        if (tamperSetting < 8 || window.tamperStatusId != 'b') {
+        if (nieJestPakowaneTamper()){
             return;
         }
 
         if (tamperSetting !== window.tamperMagazynId) {
-
             $(section).css(styles.blurred_lines);
         }
 
@@ -215,17 +224,32 @@
         //statystyki (konto sprzedającego w serwisie zewn.)
         var $konto_zewn = $('.orderd-footer-content').find('li:contains("Konto sprzedającego w serwisie zewnętrznym")');
         if ($konto_zewn.length > 0 && window.tamperMagazynId > -1) {
+            var blurProdukt;
             var $konto_zewn_text = $konto_zewn.text();
             $konto_zewn_text = $konto_zewn_text.substring($konto_zewn_text.indexOf(':')+2);
             if ($konto_zewn_text == 'demus-zegarki') {
                 setAlert('realizacja zamówienia powinna iść z magazynu M12 lub M18');
                 if (window.tamperMagazynId != '12' && window.tamperMagazynId != '18') {
-                    alert('WYBRANY ZLY MAGAZYN, powinien być M12 lub M18');
+                    blurProdukt = setInterval(function() {
+                        if ($('#products-list tbody.yui-dt-data').find('.yui-dt-col-name:first').length > 0) {
+                            clearInterval(blurProdukt);
+
+                            blurSection('#products-list td:not(.yui-dt0-col-icon)');
+                            alert('WYBRANY ZLY MAGAZYN, powinien być M12 lub M18');
+                        }
+                    }, 500);
                 }
             } else if($konto_zewn_text == 'Zegary-Demus') {
                 setAlert('realizacja zamówienia powinna iść z magazynu M8');
                 if (window.tamperMagazynId != '8') {
-                    alert('WYBRANY ZLY MAGAZYN, powinien być M8');
+                    blurProdukt = setInterval(function() {
+                        if ($('#products-list tbody.yui-dt-data').find('.yui-dt-col-name:first').length > 0) {
+                            clearInterval(blurProdukt);
+
+                            blurSection('#products-list td:not(.yui-dt0-col-icon)');
+                            alert('WYBRANY ZLY MAGAZYN, powinien być M8');
+                        }
+                    }, 500);
                 }
             } else {
                 alert('wystapil blad z rozpoznaniem konta w serwisie zewnętrznym, prosze o zgloszenie nr zamowienia do Emila');
