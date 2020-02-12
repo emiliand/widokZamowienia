@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reorganizacja widoku zamowienia
 // @namespace    demus.pl
-// @version      0.29
+// @version      0.30
 // @description  Reorganizacja widoku zamowienia
 // @author       You
 // @match        https://www.demus-zegarki.pl/panel/orderd.php*
@@ -214,7 +214,7 @@
 
         //statystyki (konto sprzedającego w serwisie zewn.)
         var $konto_zewn = $('.orderd-footer-content').find('li:contains("Konto sprzedającego w serwisie zewnętrznym")');
-        if ($konto_zewn.length > 0) {
+        if ($konto_zewn.length > 0 && window.tamperMagazynId > -1) {
             var $konto_zewn_text = $konto_zewn.text();
             $konto_zewn_text = $konto_zewn_text.substring($konto_zewn_text.indexOf(':')+2);
             if ($konto_zewn_text == 'demus-zegarki') {
